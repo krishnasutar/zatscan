@@ -80,15 +80,33 @@ The application implements a flexible storage interface (`IStorage`) with two im
 
 ## Deployment Strategy
 
-The application is configured for deployment on Replit's platform:
+The application is now configured for deployment across multiple platforms with proper production-ready file structure:
 
+### Multi-Platform Support
+- **Railway**: Configured with `railway.json` for automatic deployment
+- **Vercel**: Serverless deployment with `vercel.json` configuration
+- **AWS**: ECS/Elastic Beanstalk ready with `deploy/aws/buildspec.yml`
+- **Azure**: Container deployment with `deploy/azure/azure-pipelines.yml`
+- **DigitalOcean**: App Platform ready with `.do/app.yaml`
+- **Heroku**: Docker-based deployment with `heroku.yml`
+- **Docker**: Multi-stage build with optimized `Dockerfile`
+
+### Build Process
 - **Development**: `npm run dev` starts both frontend and backend in development mode
-- **Build**: `npm run build` creates optimized production bundles
-- **Production**: `npm run start` serves the production application
+- **Build**: `npm run build` creates optimized production bundles in `dist/` folder
+- **Production**: `npm run start` serves the production application from `dist/index.js`
 - **Database**: Configured for PostgreSQL with environment-based connection strings
 - **Port Configuration**: Backend serves on port 5000, frontend proxied through Vite in development
 
-The build process creates static assets for the frontend and a bundled Node.js application for the backend, suitable for serverless deployment environments.
+### Production File Structure
+```
+dist/                    # Production build output
+├── index.js            # Bundled Express server
+├── index.js.map        # Source map for debugging
+└── public/             # Static frontend assets
+```
+
+The build process creates static assets for the frontend and a bundled Node.js application for the backend, suitable for deployment on any major cloud platform or container environment.
 
 ## Changelog
 
@@ -106,6 +124,7 @@ Changelog:
 - June 22, 2025. Implemented ExcelJS library for proper logo image embedding with professional Excel formatting and ZatScan branding
 - June 22, 2025. Fixed logo overlapping issue by creating dedicated logo space (A1:C3) and repositioning headers for clean professional layout
 - June 25, 2025. Added flashlight toggle button to QR scanner for scanning in dark environments with smart controls and visual feedback
+- June 29, 2025. Restructured project for multi-platform deployment with proper dist/ folder, added Docker support, and created deployment configs for Railway, Vercel, AWS, Azure, DigitalOcean, and Heroku
 ```
 
 ## User Preferences
