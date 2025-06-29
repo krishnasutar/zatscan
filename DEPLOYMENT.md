@@ -42,7 +42,10 @@ npm start
 
 ### 1. Railway
 
-Railway deployment is configured with `railway.json`:
+Railway deployment has two options:
+
+#### Option A: Docker-based (Recommended)
+Uses the fixed `Dockerfile` and `railway.json`:
 
 ```bash
 # Deploy to Railway
@@ -50,6 +53,18 @@ npm install -g @railway/cli
 railway login
 railway init
 railway up
+```
+
+#### Option B: Nixpacks-based
+Uses `nixpacks.toml` configuration:
+
+```bash
+# Change railway.json to use NIXPACKS builder
+{
+  "build": {
+    "builder": "NIXPACKS"
+  }
+}
 ```
 
 **Environment Variables Required:**
