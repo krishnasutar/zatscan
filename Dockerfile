@@ -1,6 +1,9 @@
 # Use Node.js 20 LTS
 FROM node:20-alpine
 
+# Install curl for health checks
+RUN apk add --no-cache curl
+
 # Set working directory
 WORKDIR /app
 
@@ -19,11 +22,15 @@ RUN npm run build
 # Remove devDependencies after build to reduce image size
 RUN npm prune --production
 
-# Expose port
+# Expose port (Railway will override this with PORT env var)
 EXPOSE 5000
 
 # Set environment to production
 ENV NODE_ENV=production
+
+# Ensure the application starts properly
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:${PORT:-5000}/api/health || exit 1
 
 # Start the application
 CMD ["npm", "start"]
