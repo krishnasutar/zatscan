@@ -42,11 +42,9 @@ npm start
 
 ### 1. Railway
 
-Railway deployment has two options:
+Railway deployment uses Docker with a production-optimized setup:
 
-#### Option A: Docker-based (Recommended)
-Uses the fixed `Dockerfile` and `railway.json`:
-
+#### Deployment Process
 ```bash
 # Deploy to Railway
 npm install -g @railway/cli
@@ -55,7 +53,24 @@ railway init
 railway up
 ```
 
-#### Option B: Nixpacks-based
+#### Configuration Details
+- **Builder**: Docker (uses optimized Dockerfile)
+- **Build Process**: Separates frontend (Vite) and backend (esbuild) builds
+- **Production Server**: Uses dedicated `server/production.ts` (excludes Vite dependencies)
+- **Health Check**: `/api/health` endpoint with 300s timeout
+- **Port Binding**: Dynamic port assignment via `PORT` environment variable
+
+#### Build Output Structure
+```
+dist/
+├── production.js      # Bundled production server (no Vite dependencies)
+├── production.js.map  # Source map for debugging
+└── public/           # Static frontend assets
+    ├── index.html
+    └── assets/
+```
+
+#### Alternative: Nixpacks-based
 Uses `nixpacks.toml` configuration:
 
 ```bash

@@ -17,7 +17,10 @@ RUN npm ci
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN vite build && esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --target=node20 --sourcemap
+
+# Verify the build output
+RUN ls -la dist/
 
 # Remove devDependencies after build to reduce image size
 RUN npm prune --production
@@ -33,4 +36,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:${PORT:-5000}/api/health || exit 1
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["node", "dist/production.js"]

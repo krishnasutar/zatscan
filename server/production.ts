@@ -71,20 +71,12 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    // Dynamically import Vite setup only in development
-    const viteModule = await import("./vite");
-    await viteModule.setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+  // Only serve static files in production
+  serveStatic(app);
 
   // Use Railway's PORT environment variable in production, fallback to 5000 for development
   const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
-  const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "0.0.0.0";
+  const host = "0.0.0.0";
   
   server.listen({
     port,
