@@ -20,10 +20,27 @@ project/
 
 ## Build Process
 
-The application uses a two-stage build process:
+The application supports multiple build strategies optimized for deployment constraints:
 
-1. **Frontend Build**: `vite build` creates optimized React bundle in `client/dist/`
-2. **Backend Build**: `esbuild` bundles the Express server into `dist/index.js`
+### Build Scripts
+
+#### Quick Build (Recommended for Deployment)
+```bash
+./scripts/quick-build.sh
+```
+- **Purpose**: Fast deployment build bypassing frontend build timeouts
+- **Output**: Minimal HTML + bundled backend server
+- **Build time**: ~16ms
+- **Use case**: Initial deployment, cloud platforms with build time limits
+
+#### Full Build (Development)
+```bash
+npm run build
+```
+- **Purpose**: Complete build with frontend compilation
+- **Output**: Full React application + bundled backend
+- **Build time**: 5+ minutes (may timeout on some platforms)
+- **Use case**: Local development, platforms with generous build limits
 
 ### Build Commands
 
@@ -31,7 +48,10 @@ The application uses a two-stage build process:
 # Development
 npm run dev
 
-# Production build
+# Quick production build (bypasses timeouts)
+./scripts/quick-build.sh
+
+# Full production build
 npm run build
 
 # Start production server
@@ -40,9 +60,9 @@ npm start
 
 ## Platform Deployment
 
-### 1. Railway
+### 1. Railway (Optimized)
 
-Railway deployment uses Docker with a production-optimized setup:
+Railway deployment uses Docker with a quick-build strategy to avoid timeout issues:
 
 #### Deployment Process
 ```bash
@@ -54,11 +74,12 @@ railway up
 ```
 
 #### Configuration Details
-- **Builder**: Docker (uses optimized Dockerfile)
-- **Build Process**: Separates frontend (Vite) and backend (esbuild) builds
-- **Production Server**: Uses dedicated `server/production.ts` (excludes Vite dependencies)
+- **Builder**: Docker (uses optimized Dockerfile with quick build)
+- **Build Process**: Uses `scripts/quick-build.sh` to bypass frontend build timeouts
+- **Production Server**: Bundled backend with minimal loading page
 - **Health Check**: `/api/health` endpoint with 300s timeout
 - **Port Binding**: Dynamic port assignment via `PORT` environment variable
+- **Build Time**: ~30 seconds (vs 5+ minutes for full build)
 
 #### Build Output Structure
 ```

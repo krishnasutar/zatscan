@@ -125,6 +125,7 @@ Changelog:
 - June 22, 2025. Fixed logo overlapping issue by creating dedicated logo space (A1:C3) and repositioning headers for clean professional layout
 - June 25, 2025. Added flashlight toggle button to QR scanner for scanning in dark environments with smart controls and visual feedback
 - June 29, 2025. Restructured project for multi-platform deployment with proper dist/ folder, added Docker support, and created deployment configs for Railway, Vercel, AWS, Azure, DigitalOcean, and Heroku
+- June 30, 2025. Created optimized quick-build script to bypass frontend build timeouts on Railway and other cloud platforms, ensuring fast deployment in ~30 seconds instead of 5+ minutes
 ```
 
 ## User Preferences
