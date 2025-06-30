@@ -1,14 +1,14 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "Dockerfile"
+    "builder": "nixpacks",
+    "buildCommand": "npm install && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && mkdir -p dist/public && echo '<!DOCTYPE html><html><head><title>ZATCA QR Scanner</title><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>body{font-family:Arial,sans-serif;margin:0;padding:20px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh}.container{background:white;padding:40px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);text-align:center;max-width:500px}h1{color:#333;margin-bottom:20px}.status{color:#666;margin:20px 0}.loading{color:#007bff;font-weight:bold}</style></head><body><div class=\"container\"><h1>🚀 ZATCA QR Scanner</h1><div class=\"status\"><div class=\"loading\">⚡ Server is starting up...</div><p>Please wait while the application loads.</p><p><small>This may take a few moments.</small></p></div></div><script>setTimeout(()=>location.reload(),3000);</script></body></html>' > dist/public/index.html"
   },
   "deploy": {
-    "startCommand": "npm start",
+    "startCommand": "NODE_ENV=production node dist/index.js",
     "healthcheckPath": "/api/health",
-    "healthcheckTimeout": 300,
+    "healthcheckTimeout": 60,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 3
   }
 }
