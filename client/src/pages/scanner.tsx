@@ -29,20 +29,30 @@ export default function Scanner() {
       const response = await apiRequest('POST', '/api/sessions', { sessionId });
       return response.json();
     },
+    onError: (error) => {
+      console.error('Failed to create session:', error);
+      toast({
+        title: "Connection Error",
+        description: "Failed to initialize scanning session. Please refresh the page.",
+        variant: "destructive",
+      });
+    },
   });
 
   // Get session stats
-  const { data: stats } = useQuery({
+  const { data: stats, error: statsError } = useQuery({
     queryKey: ['/api/sessions', sessionId, 'stats'],
     queryFn: () => apiRequest('GET', `/api/sessions/${sessionId}/stats`).then(res => res.json()),
     enabled: !!sessionId,
+    initialData: { totalScans: 0, validScans: 0, totalAmount: 0, errors: 0 },
   });
 
   // Get scanned QR codes
-  const { data: qrCodes = [] } = useQuery({
+  const { data: qrCodes = [], error: qrCodesError } = useQuery({
     queryKey: ['/api/qr-codes', sessionId],
     queryFn: () => apiRequest('GET', `/api/qr-codes/${sessionId}`).then(res => res.json()),
     enabled: !!sessionId,
+    initialData: [],
   });
 
   // Clear session
@@ -62,7 +72,12 @@ export default function Scanner() {
   });
 
   useEffect(() => {
-    createSessionMutation.mutate();
+    // Add a small delay to ensure server is ready
+    const timer = setTimeout(() => {
+      createSessionMutation.mutate();
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClearSession = async () => {
