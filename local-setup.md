@@ -26,14 +26,23 @@ npm --version
 git clone [your-repo-url]
 cd zatca-qr-scanner
 
-# Install dependencies
-npm install
+# Install dependencies (with legacy peer deps to handle conflicts)
+npm install --legacy-peer-deps
 
 # Build the application
 npm run build
 
 # Start the production server
 npm start
+```
+
+### Alternative if still having issues:
+```bash
+# Force install dependencies
+npm install --force
+
+# Or use specific Node.js version
+npm install --legacy-peer-deps --no-optional
 ```
 
 ### 3. Access the Application
